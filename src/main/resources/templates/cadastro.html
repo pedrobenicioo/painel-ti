@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Criar Agente de TI</title>
+    <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #f4f7fa;
+          margin: 0;
+          padding: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+        form {
+          background: white;
+          padding: 30px 40px;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          width: 100%;
+          max-width: 400px;
+          box-sizing: border-box;
+        }
+        h2 {
+          margin-bottom: 25px;
+          color: #2c3e50;
+          text-align: center;
+        }
+        label {
+          display: block;
+          margin-bottom: 6px;
+          font-weight: 600;
+          color: #34495e;
+        }
+        input {
+          width: 100%;
+          padding: 10px 12px;
+          margin-bottom: 18px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          font-size: 1em;
+          box-sizing: border-box;
+          transition: border-color 0.3s;
+        }
+        input:focus {
+          border-color: #2980b9;
+          outline: none;
+        }
+        button {
+          width: 100%;
+          padding: 12px;
+          background-color: #2980b9;
+          color: white;
+          font-size: 1.1em;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: background-color 0.3s;
+          font-weight: 700;
+        }
+        button:hover {
+          background-color: #216799;
+        }
+        .message {
+          margin-top: 15px;
+          text-align: center;
+          font-weight: 600;
+        }
+        .message.success {
+          color: green;
+        }
+        .message.error {
+          color: red;
+        }
+        @media (max-width: 480px) {
+          body {
+            padding: 15px;
+          }
+          form {
+            padding: 20px;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<form id="formAgente">
+    <h2>Cadastro TI</h2>
+
+    <label for="nomeCompleto">Nome Completo</label>
+    <input type="text" id="nomeCompleto" name="nomeCompleto" required />
+
+    <label for="senha">Senha</label>
+    <input type="password" id="senha" name="senha" required />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required />
+
+    <label for="telefone">Telefone</label>
+    <input type="text" id="telefone" name="telefone" required />
+
+    <label for="matricula">Matrícula</label>
+    <input type="text" id="matricula" name="matricula" required />
+
+    <button type="submit">cadastrar</button>
+
+    <div class="message" id="message"></div>
+</form>
+
+<script>
+    const form = document.getElementById('formAgente');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const dados = {
+        nomeCompleto: form.nomeCompleto.value.trim(),
+        senha: form.senha.value,
+        email: form.email.value.trim(),
+        telefone: form.telefone.value.trim(),
+        matricula: form.matricula.value.trim()
+      };
+
+      try {
+        const response = await fetch('/api/agentes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dados)
+        });
+
+        if (response.ok) {
+          messageDiv.textContent = 'Cadastrado com sucesso!';
+          messageDiv.className = 'message success';
+          form.reset();
+        } else {
+          const errorData = await response.json();
+          messageDiv.textContent = 'Erro: ' + (errorData.message || 'Não foi possível criar o agente.');
+          messageDiv.className = 'message error';
+        }
+      } catch (error) {
+        messageDiv.textContent = 'Erro..';
+        messageDiv.className = 'message error';
+      }
+    });
+</script>
+
+</body>
+</html>

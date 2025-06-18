@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Login Agente de TI</title>
+</head>
+<body>
+<h2>Login - Agente de TI</h2>
+
+<form th:action="@{/doLogin}" method="post">
+  <label>Matrícula:</label>
+  <input type="text" name="matricula" required />
+  <br />
+  <label>Senha:</label>
+  <input type="password" name="senha" required />
+  <br />
+  <button type="submit">Entrar</button>
+</form>
+
+<p th:if="${erro}" th:text="${erro}" style="color:red;"></p>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Abertura de Chamado</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Reset básico */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: #1468b8;
+        }
+
+        form {
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+
+        input, textarea, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            border: none;
+            font-weight: bold;
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 20px 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Suporte TI - INSS João Pessoa</h1>
+
+    <form id="formChamado">
+        <input type="text" name="titulo" placeholder="Título do Chamado" required>
+        <textarea name="descricao" placeholder="Descreva o problema" rows="4" required></textarea>
+        <input type="text" name="nomeSolicitante" placeholder="Nome do Solicitante" required>
+        <input type="email" name="emailSolicitante" placeholder="Email do Solicitante" required>
+        <input type="text" name="numeroSolicitante" placeholder="Telefone" required>
+        <input type="text" name="agenciaSolicitante" placeholder="Agência" required>
+        <button type="submit">Enviar Chamado</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('formChamado').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const dados = Object.fromEntries(new FormData(this).entries());
+
+        fetch('http://localhost:8080/api/chamados', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dados)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // Pega o JSON da resposta
+            } else {
+                throw new Error('Erro ao enviar chamado.');
+            }
+        })
+        .then(data => {
+            alert(`Chamado enviado com sucesso! numero de registro: ${data.id}`);
+            this.reset();
+        })
+        .catch(err => {
+            alert(err.message || 'Erro de conexão com o servidor.');
+        });
+    });
+</script>
+
+</body>
+</html>
